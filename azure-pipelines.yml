@@ -6,7 +6,7 @@
 trigger: none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 parameters:
   - name: env
@@ -16,24 +16,24 @@ parameters:
       - prod
 
 variables:
-- ${{if eq(parameters.env, 'preprod')}}
+- ${{ if eq(parameters.env, 'preprod') }}:
   - group: VG-preprod
 
-- ${{if eq(parameters.env, 'prod')}}
+- ${{ if eq(parameters.env, 'prod') }}:
   - group: VG-prod
 
-- group: VG-KVlinked
+- group: VG-kvlinked
 
 - name: WD
-  value: '$(System.DefaultWorkingDirectory)/environment/{{parameters.env}}'
+  value: '$(System.DefaultWorkingDirectory)/environment/${{ parameters.env }}'
 
 stages:
-  - stage: build and scan
+  - stage: build
     displayName: build and scan
 
     jobs:
       - job: build
-        displayName: build job
+        displayName: build_job
 
         steps:
 
@@ -59,7 +59,7 @@ stages:
               workingDirectory: '$(WD)'
 
           - task: Bash@3
-            displayName: install checkov
+            displayName: install_checkov
             inputs:
               targetType: 'inline'
               script: |
@@ -97,7 +97,7 @@ stages:
     displayName: wait for approval
 
     jobs:
-      - job: job for approval
+      - job: job_for_approval
         pool: server
         displayName: wait for approval
 
