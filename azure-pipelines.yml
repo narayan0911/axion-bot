@@ -46,7 +46,7 @@ stages:
               workingDirectory: '$(WD)'
               backendServiceArm: 'narayanServiceConnection'
               backendAzureRmResourceGroupName: $(backendrg)
-              backendAzureRmStorageAccountName: $(mishrastorage)
+              backendAzureRmStorageAccountName: $(storageaccount)
               backendAzureRmContainerName: $(container)
               backendAzureRmKey: $(key)
 
