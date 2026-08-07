@@ -1,0 +1,109 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: env
+    default: 'preprod'
+    values:
+      - preprod
+      - prod
+
+variables:
+- ${{if eq(parameters.env, 'preprod')}}
+  - group: VG-preprod
+
+- ${{if eq(parameters.env, 'prod')}}
+  - group: VG-prod
+
+- group: VG-KVlinked
+
+- name: WD
+  value: '$(System.DefaultWorkingDirectory)/environment/{{parameters.env}}'
+
+stages:
+  - stage: build and scan
+    displayName: build and scan
+
+    jobs:
+      - job: build
+        displayName: build job
+
+        steps:
+
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(WD)'
+              backendServiceArm: 'narayanServiceConnection'
+              backendAzureRmStorageAccountName: 'mishrastorage'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'axion.tfstate'
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+              workingDirectory: '$(WD)'
+
+          - task: Bash@3
+            displayName: install checkov
+            inputs:
+              targetType: 'inline'
+              script: |
+                python3 -m pip install --upgrade pip
+                      python3 -m pip install checkov
+                      checkov --version
+
+          - task: Bash@3
+            displayName: run security scan checkov
+            continueOnError: true
+            inputs:
+              targetType: 'inline'
+              script: 'checkov -d $(WD)'
+
+          - task: Bash@3
+            displayName: install tfsec
+            inputs:
+              targetType: 'inline'
+              script: 'curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash'
+
+          - task: Bash@3
+            displayName: run tfsec
+            inputs:
+              targetType: 'inline'
+              script: 'tfsec "$(WD)"'
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '$(WD)'
+              environmentServiceNameAzureRM: 'narayanServiceConnection'
+
+  - stage: approval
+    displayName: wait for approval
+
+    jobs:
+      - job: job for approval
+        pool: server
+        displayName: wait for approval
+
+        steps:
+          
+          - task: ManualValidation@1
+            timeoutInMinutes: 1
+            inputs:
+              notifyUsers: 'saurabhmishra4@kpmg.com'
