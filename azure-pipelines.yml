@@ -22,7 +22,7 @@ variables:
 - group: VG-kvlinked
 
 - name: WD
-  value: '$(System.DefaultWorkingDirectory)/environment/${{ parameters.env }}'
+  value: '$(System.DefaultWorkingDirectory)/environments/${{ parameters.env }}'
 
 stages:
   - stage: build
