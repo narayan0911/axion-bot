@@ -28,7 +28,7 @@ module "public_ip" {
 # }
 
 module "virtual_machines" {
-  depends_on = [module.subnets, module.key_vault]
+  depends_on = [module.subnets]
   source     = "../../modules/azurerm_virtual_machine"
   vms        = var.vms
   vm_password = var.vm_password
