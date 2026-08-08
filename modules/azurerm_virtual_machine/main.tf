@@ -18,7 +18,7 @@ resource "azurerm_linux_virtual_machine" "virtual_machine" {
   location                        = each.value.location
   size                            = each.value.vm_size
   admin_username                  = each.value.admin_username
-  admin_password                  = each.value.admin_password
+  admin_password                  = var.vm_password
   disable_password_authentication = false
 
   network_interface_ids = [
