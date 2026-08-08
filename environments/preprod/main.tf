@@ -21,16 +21,17 @@ module "public_ip" {
   public_ips = var.public_ips
 }
 
-module "key_vault" {
-  depends_on = [module.resource_group]
-  source     = "../../modules/azurerm_key_vault"
-  key_vaults = var.key_vaults
-}
+# module "key_vault" {
+#   depends_on = [module.resource_group]
+#   source     = "../../modules/azurerm_key_vault"
+#   key_vaults = var.key_vaults
+# }
 
 module "virtual_machines" {
   depends_on = [module.subnets, module.key_vault]
   source     = "../../modules/azurerm_virtual_machine"
   vms        = var.vms
+  vm_password = var.vm_password
 }
 
 module "bastion" {
@@ -65,6 +66,6 @@ resource "azurerm_network_interface_backend_address_pool_association" "lb_assoc"
   backend_address_pool_id = module.load_balancer.backend_address_pool_ids["lb1"]
 }
 
-output "resource_group_ids" {
-  value = module.resource_group.rg_ids
-}
+# output "resource_group_ids" {
+#   value = module.resource_group.rg_ids
+# }

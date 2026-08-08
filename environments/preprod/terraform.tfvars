@@ -76,8 +76,8 @@ vms = {
     vm_name         = "frontend-vm-1-dev"
     vm_size         = "Standard_B1s"
     admin_username  = "devopsadmin"
-    key_vault_name  = "kv-chor-dev-123"
-    secret_name     = "admin-password"
+    # key_vault_name  = "kv-chor-dev-123"
+    # secret_name     = "admin-password"
     image_publisher = "Canonical"
     image_offer     = "0001-com-ubuntu-server-jammy"
     image_sku       = "22_04-lts"
@@ -92,8 +92,8 @@ vms = {
     vm_name         = "frontend-vm-2-dev"
     vm_size         = "Standard_B1s"
     admin_username  = "devopsadmin"
-    key_vault_name  = "kv-chor-dev-123"
-    secret_name     = "admin-password"
+    # key_vault_name  = "kv-chor-dev-123"
+    # secret_name     = "admin-password"
     image_publisher = "Canonical"
     image_offer     = "0001-com-ubuntu-server-jammy"
     image_sku       = "22_04-lts"
@@ -108,8 +108,8 @@ vms = {
     vm_name         = "backend-vm-1-dev"
     vm_size         = "Standard_B1s"
     admin_username  = "devopsadmin"
-    key_vault_name  = "kv-chor-dev-123"
-    secret_name     = "admin-password"
+    # key_vault_name  = "kv-chor-dev-123"
+    # secret_name     = "admin-password"
     image_publisher = "Canonical"
     image_offer     = "0001-com-ubuntu-server-jammy"
     image_sku       = "22_04-lts"
@@ -124,8 +124,8 @@ vms = {
     vm_name         = "backend-vm-2-dev"
     vm_size         = "Standard_B1s"
     admin_username  = "devopsadmin"
-    key_vault_name  = "kv-chor-dev-123"
-    secret_name     = "admin-password"
+    # key_vault_name  = "kv-chor-dev-123"
+    # secret_name     = "admin-password"
     image_publisher = "Canonical"
     image_offer     = "0001-com-ubuntu-server-jammy"
     image_sku       = "22_04-lts"
@@ -183,11 +183,11 @@ load_balancers = {
   }
 }
 
-key_vaults = {
-  kv1 = {
-    name        = "kv-chor-dev-123"
-    location    = "centralindia"
-    rg_name     = "rg-chor-dev"
-    secret_name = "admin-password"
-  }
-}
+# key_vaults = {
+#   kv1 = {
+#     name        = "kv-chor-dev-123"
+#     location    = "centralindia"
+#     rg_name     = "rg-chor-dev"
+#     secret_name = "admin-password"
+#   }
+# }

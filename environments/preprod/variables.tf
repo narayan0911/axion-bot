@@ -30,6 +30,10 @@ variable "load_balancers" {
   type = map(any)
 }
 
-variable "key_vaults" {
-  type = map(any)
+# variable "key_vaults" {
+#   type = map(any)
+# }
+
+variable "vm_password" {
+  type = string
 }
