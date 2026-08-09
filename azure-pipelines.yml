@@ -91,7 +91,7 @@ stages:
               workingDirectory: '$(WD)'
               environmentServiceNameAzureRM: 'narayanServiceConnection'
             env:
-              TF_VARS_vm_password: $(vmpassword)
+              TF_VAR_vm_password: $(vmpassword)
   - stage: approval
     displayName: wait for approval
 
