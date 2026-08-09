@@ -11,8 +11,8 @@ data "azurerm_key_vault" "kv" {
   resource_group_name = each.value.rg_name
 }
 
-data "azurerm_key_vault_secret" "admin_password" {
-  for_each     = var.vms
-  name         = each.value.secret_name
-  key_vault_id = data.azurerm_key_vault.kv[each.key].id
-}
+# data "azurerm_key_vault_secret" "admin_password" {
+#   for_each     = var.vms
+#   name         = each.value.secret_name
+#   key_vault_id = data.azurerm_key_vault.kv[each.key].id
+# }
