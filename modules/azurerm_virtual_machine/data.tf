@@ -5,11 +5,11 @@ data "azurerm_subnet" "subnet" {
   resource_group_name  = each.value.rg_name
 }
 
-data "azurerm_key_vault" "kv" {
-  for_each            = var.vms
-  name                = each.value.key_vault_name
-  resource_group_name = each.value.rg_name
-}
+# data "azurerm_key_vault" "kv" {
+#   for_each            = var.vms
+#   name                = each.value.key_vault_name
+#   resource_group_name = each.value.rg_name
+# }
 
 # data "azurerm_key_vault_secret" "admin_password" {
 #   for_each     = var.vms
