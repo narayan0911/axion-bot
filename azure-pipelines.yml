@@ -29,69 +29,77 @@ stages:
     displayName: build and scan
 
     jobs:
-      - job: build
-        displayName: build_job
+      # - job: build
+      #   displayName: build_job
+      - deployment: deploy${{ parameters.env }}
+        displayName: deploy ${{ parameters.env }}
 
-        steps:
+        environment: ${{ parameters.env }}
+        strategy:
+         runOnce:
+           deploy:
+             
 
-          - task: TerraformInstaller@1
-            inputs:
-              terraformVersion: 'latest'
+              steps:
+
+                - task: TerraformInstaller@1
+                  inputs:
+                    terraformVersion: 'latest'
 
 
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: '$(WD)'
-              backendServiceArm: 'narayanServiceConnection'
-              backendAzureRmResourceGroupName: $(backendrg)
-              backendAzureRmStorageAccountName: $(storageaccount)
-              backendAzureRmContainerName: $(container)
-              backendAzureRmKey: $(key)
+                - task: TerraformTask@5
+                  inputs:
+                    provider: 'azurerm'
+                    command: 'init'
+                    workingDirectory: '$(WD)'
+                    backendServiceArm: 'narayanServiceConnection'
+                    backendAzureRmResourceGroupName: $(backendrg)
+                    backendAzureRmStorageAccountName: $(storageaccount)
+                    backendAzureRmContainerName: $(container)
+                    backendAzureRmKey: $(key)
 
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'validate'
-              workingDirectory: '$(WD)'
+                - task: TerraformTask@5
+                  inputs:
+                    provider: 'azurerm'
+                    command: 'validate'
+                    workingDirectory: '$(WD)'
 
-          - task: Bash@3
-            displayName: install_checkov
-            inputs:
-              targetType: 'inline'
-              script: |
-                python3 -m pip install --upgrade pip
-                      python3 -m pip install checkov
-                      checkov --version
+                - task: Bash@3
+                  displayName: install_checkov
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      python3 -m pip install --upgrade pip
+                            python3 -m pip install checkov
+                            checkov --version
 
-          - task: Bash@3
-            displayName: run security scan checkov
-            continueOnError: true
-            inputs:
-              targetType: 'inline'
-              script: 'checkov -d $(WD)'
+                - task: Bash@3
+                  displayName: run security scan checkov
+                  continueOnError: true
+                  inputs:
+                    targetType: 'inline'
+                    script: 'checkov -d $(WD)'
 
-          - task: Bash@3
-            displayName: install tfsec
-            inputs:
-              targetType: 'inline'
-              script: 'curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash'
+                - task: Bash@3
+                  displayName: install tfsec
+                  inputs:
+                    targetType: 'inline'
+                    script: 'curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash'
 
-          - task: Bash@3
-            displayName: run tfsec
-            inputs:
-              targetType: 'inline'
-              script: 'tfsec "$(WD)"'
+                - task: Bash@3
+                  displayName: run tfsec
+                  inputs:
+                    targetType: 'inline'
+                    script: 'tfsec "$(WD)"'
 
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              workingDirectory: '$(WD)'
-              environmentServiceNameAzureRM: 'narayanServiceConnection'
-            env:
-              TF_VAR_vm_password: $(vmpassword)
+                - task: TerraformTask@5
+                  inputs:
+                    provider: 'azurerm'
+                    command: 'plan'
+                    workingDirectory: '$(WD)'
+                    environmentServiceNameAzureRM: 'narayanServiceConnection'
+                  env:
+                    TF_VAR_vm_password: $(vmpassword)
   - stage: approval
     displayName: wait for approval
 
