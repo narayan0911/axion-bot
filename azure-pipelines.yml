@@ -53,10 +53,10 @@ stages:
                     command: 'init'
                     workingDirectory: '$(WD)'
                     backendServiceArm: 'narayanServiceConnection'
-                    backendAzureRmResourceGroupName: $(backendrg)
-                    backendAzureRmStorageAccountName: $(storageaccount)
-                    backendAzureRmContainerName: $(container)
-                    backendAzureRmKey: $(key)
+                    backendAzureRmResourceGroupName: '$(backendrg)'
+                    backendAzureRmStorageAccountName: '$(storageaccount)'
+                    backendAzureRmContainerName: '$(container)'
+                    backendAzureRmKey: '$(key)'
 
                 - task: TerraformTask@5
                   inputs:
